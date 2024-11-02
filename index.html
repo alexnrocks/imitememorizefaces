@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Imitação e memória</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #e3f2fd; /* Azul claro */
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            margin-bottom: 20px;
+            color: #1e88e5; /* Azul */
+        }
+        #image-display {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px; /* Altura fixa para centralização */
+            margin-bottom: 20px;
+        }
+        #options {
+            display: none; /* Oculta inicialmente */
+            margin: 20px auto; /* Margem automática para centralizar */
+            border-collapse: collapse; /* Colapsa as bordas */
+            width: 100%; /* Largura total */
+            max-width: 640px; /* Largura máxima da tabela */
+            display: flex; /* Flexbox para a tabela */
+            flex-wrap: wrap; /* Permite quebrar linhas */
+            justify-content: center; /* Centraliza os itens */
+        }
+        #options div {
+            padding: 5px; /* Espaçamento interno */
+            border: 2pt solid #90caf9; /* Linha de separação */
+            margin: 5px; /* Margem entre as células */
+            border-radius: 8px; /* Bordas arredondadas */
+            display: flex; /* Flexbox para centralizar imagem */
+            justify-content: center; /* Centraliza horizontalmente */
+            align-items: center; /* Centraliza verticalmente */
+        }
+        .option {
+            width: 100px; /* Ajuste de tamanho */
+            height: 100px; /* Ajuste de tamanho */
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .option:hover {
+            transform: scale(1.05);
+        }
+        .red-circle {
+            display: inline-block;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background-color: rgba(255, 0, 0, 0.3); /* Círculo vermelho claro */
+            position: relative;
+        }
+        .shake {
+            animation: shake 0.5s;
+        }
+        @keyframes shake {
+            0% { transform: translate(0); }
+            25% { transform: translate(-5px); }
+            50% { transform: translate(5px); }
+            75% { transform: translate(-5px); }
+            100% { transform: translate(0); }
+        }
+        .star {
+            font-size: 20px;
+            color: gold;
+            position: absolute;
+            top: -10px;
+            animation: move-up 0.5s ease-in-out forwards;
+        }
+        @keyframes move-up {
+            from { opacity: 1; top: 0; }
+            to { opacity: 0; top: -30px; }
+        }
+        #score {
+            font-size: 24px;
+            margin: 20px 0;
+            color: #1e88e5; /* Azul */
+        }
+        #start-button {
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+            background-color: #42a5f5; /* Azul mais forte */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        #start-button:hover {
+            background-color: #1e88e5; /* Azul mais escuro */
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Imite as faces e memorize</h1>
+    <div id="score">Acertos: 0</div>
+    <div id="image-display"></div>
+    <div id="options"></div> <!-- Usar um div em vez de uma tabela -->
+    <button id="start-button">Iniciar</button>
+
+    <script>
+        const images = [
+            { src: '/1.png' },
+            { src: '/2.png' },
+            { src: '/3.png' },
+            { src: '/4.png' },
+            { src: '/5.png' },
+            { src: '/6.png' },
+            { src: '/7.png' },
+            { src: '/8.png' },
+            { src: '/9.png' },
+            { src: '/10.png' },
+            { src: '/11.png' },
+            { src: '/12.png' },
+            { src: '/13.png' },
+            { src: '/14.png' },
+            { src: '/15.png' },
+            { src: '/16.png' }
+        ];
+        
+        let currentStep = 1;
+        let currentSequence = [];
+        let userScore = 0;
+        let attemptsLeft = 0;
+
+        function startGame() {
+            userScore = 0;
+            currentStep = 1;
+            document.getElementById('score').innerText = `Acertos: ${userScore}`;
+            document.getElementById('start-button').style.display = 'none';
+            nextRound();
+        }
+
+        function nextRound() {
+            currentSequence = generateSequence(currentStep);
+            attemptsLeft = currentStep;
+            displayImages(currentSequence);
+        }
+
+        function generateSequence(length) {
+            const sequence = [];
+            for (let i = 0; i < length; i++) {
+                sequence.push(images[Math.floor(Math.random() * images.length)]);
+            }
+            return sequence;
+        }
+
+        function displayImages(sequence) {
+            const display = document.getElementById('image-display');
+            display.innerHTML = '';
+            sequence.forEach(() => {
+                const redCircle = document.createElement('div');
+                redCircle.classList.add('red-circle');
+                display.appendChild(redCircle);
+            });
+            setTimeout(() => {
+                display.innerHTML = '';
+                sequence.forEach(image => {
+                    const img = document.createElement('img');
+                    img.src = image.src;
+                    img.width = 150; // Tamanho maior para visualização
+                    img.height = 150; // Tamanho maior para visualização
+                    display.appendChild(img);
+                });
+                setTimeout(() => {
+                    display.innerHTML = '';
+                    showOptions();
+                }, sequence.length * 2000);
+            }, 2000);
+        }
+
+        function showOptions() {
+            const optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';
+            optionsContainer.style.display = 'flex'; // Mostra a tabela
+            images.sort(() => Math.random() - 0.5).forEach((image, index) => {
+                const cell = document.createElement('div'); // Cria uma célula
+                const option = document.createElement('img');
+                option.src = image.src;
+                option.className = 'option';
+                option.onclick = () => checkSelection(image.src, option);
+                cell.appendChild(option);
+                optionsContainer.appendChild(cell); // Adiciona a célula ao container
+            });
+        }
+
+        function checkSelection(selectedImageSrc, optionElement) {
+            const isCorrect = currentSequence.some(image => image.src === selectedImageSrc);
+            if (isCorrect) {
+                userScore++;
+                document.getElementById('score').innerText = `Acertos: ${userScore}`;
+                currentSequence = currentSequence.filter(image => image.src !== selectedImageSrc);
+                
+                showStars(optionElement);
+
+                if (currentSequence.length === 0) {
+                    currentStep++;
+                    setTimeout(() => nextRound(), 1000);
+                }
+            } else {
+                optionElement.classList.add('shake');
+                attemptsLeft--;
+
+                if (attemptsLeft <= 0) {
+                    setTimeout(() => nextRound(), 1000);
+                }
+            }
+        }
+
+        function showStars(optionElement) {
+            for (let i = 0; i < 3; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.innerHTML = '⭐';
+                optionElement.parentNode.appendChild(star);
+
+                setTimeout(() => star.remove(), 500);
+            }
+        }
+
+        document.getElementById('start-button').onclick = startGame;
+    </script>
+
+</body>
+</html>
+
