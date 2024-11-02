@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jogo de Memória com Imagens</title>
+    <title>Memória e Expressão</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -15,6 +15,11 @@
         h1 {
             margin-bottom: 20px;
             color: #1e88e5; /* Azul */
+        }
+        #instructions {
+            font-size: 18px;
+            color: #424242; /* Cor cinza escuro */
+            margin-bottom: 20px;
         }
         #image-display {
             display: flex;
@@ -41,6 +46,7 @@
             display: flex; /* Flexbox para centralizar imagem */
             justify-content: center; /* Centraliza horizontalmente */
             align-items: center; /* Centraliza verticalmente */
+            position: relative; /* Necessário para a posição da estrela */
         }
         .option {
             width: 100px; /* Ajuste de tamanho */
@@ -102,7 +108,8 @@
 </head>
 <body>
 
-    <h1>Jogo de Memória com Imagens</h1>
+    <h1>Memória e Expressão</h1>
+    <div id="instructions">Imite cada expressão e memorize.</div>
     <div id="score">Acertos: 0</div>
     <div id="image-display"></div>
     <div id="options"></div> <!-- Usar um div em vez de uma tabela -->
@@ -175,7 +182,7 @@
                 setTimeout(() => {
                     display.innerHTML = '';
                     showOptions();
-                }, sequence.length * 2000);
+                }, sequence.length * 4000); // Aumenta o tempo para 4 segundos
             }, 2000);
         }
 
@@ -201,7 +208,7 @@
                 document.getElementById('score').innerText = `Acertos: ${userScore}`;
                 currentSequence = currentSequence.filter(image => image.src !== selectedImageSrc);
                 
-                showStars(optionElement);
+                showStars(optionElement); // Mostra a estrela sobre a opção correta
 
                 if (currentSequence.length === 0) {
                     currentStep++;
@@ -218,14 +225,11 @@
         }
 
         function showStars(optionElement) {
-            for (let i = 0; i < 3; i++) {
-                const star = document.createElement('div');
-                star.className = 'star';
-                star.innerHTML = '⭐';
-                optionElement.parentNode.appendChild(star);
-
-                setTimeout(() => star.remove(), 500);
-            }
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.innerHTML = '⭐';
+            optionElement.parentNode.appendChild(star);
+            setTimeout(() => star.remove(), 500);
         }
 
         document.getElementById('start-button').onclick = startGame;
