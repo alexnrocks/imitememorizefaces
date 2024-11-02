@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Expressão e Memória</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #e3f2fd; /* Azul claro */
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* Oculta rolagem */
+        }
+        h1 {
+            margin: 20px 0 10px;
+            color: #1e88e5; /* Azul */
+            font-size: 5vw; /* Tamanho da fonte em relação à largura da tela */
+        }
+        #instructions {
+            font-size: 3vw; /* Tamanho da fonte em relação à largura da tela */
+            color: #424242; /* Cor cinza escuro */
+            margin-bottom: 15px;
+        }
+        #image-display {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 30vh; /* Altura em relação à altura da tela */
+            margin-bottom: 15px;
+            overflow: hidden; /* Oculta overflow se houver */
+        }
+        #options {
+            display: none; /* Oculta inicialmente */
+            display: grid; /* Usar grid para organizar as opções */
+            grid-template-columns: repeat(3, 1fr); /* 3 colunas */
+            gap: 10px; /* Espaçamento entre as células */
+            margin-top: 10px; /* Margem superior para espaçamento */
+            padding: 0 5px; /* Espaco nas laterais */
+        }
+        #options div {
+            padding: 5px; /* Espaçamento interno */
+            position: relative; /* Necessário para a posição da estrela */
+        }
+        .option {
+            width: 100%; /* Usa a largura total da célula */
+            height: auto; /* Altura automática para manter proporção */
+            max-width: 80px; /* Largura máxima */
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .option:hover {
+            transform: scale(1.05);
+        }
+        .red-circle {
+            display: inline-block;
+            width: calc(25vw - 10px); /* Largura com margens ajustadas */
+            height: auto; /* Altura automática para manter proporção */
+            max-width: 100px; /* Largura máxima */
+            border-radius: 50%;
+            background-color: rgba(255, 0, 0, 0.3); /* Círculo vermelho claro */
+            position: relative;
+        }
+        .shake {
+            animation: shake 0.5s;
+        }
+        @keyframes shake {
+            0% { transform: translate(0); }
+            25% { transform: translate(-5px); }
+            50% { transform: translate(5px); }
+            75% { transform: translate(-5px); }
+            100% { transform: translate(0); }
+        }
+        .star {
+            font-size: 5vw; /* Tamanho da estrela em relação à largura da tela */
+            color: gold;
+            position: absolute;
+            top: -10px;
+            animation: move-up 0.5s ease-in-out forwards;
+        }
+        @keyframes move-up {
+            from { opacity: 1; top: 0; }
+            to { opacity: 0; top: -30px; }
+        }
+        #score {
+            font-size: 4vw; /* Tamanho da fonte em relação à largura da tela */
+            margin: 10px 0;
+            color: #1e88e5; /* Azul */
+        }
+        #start-button {
+            padding: 10px 15px;
+            font-size: 4vw; /* Tamanho da fonte em relação à largura da tela */
+            cursor: pointer;
+            background-color: #42a5f5; /* Azul mais forte */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            margin-top: 15px; /* Espaço acima do botão */
+        }
+        #start-button:hover {
+            background-color: #1e88e5; /* Azul mais escuro */
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Expressão e Memória</h1>
+    <div id="instructions">Imite cada expressão e memorize.</div>
+    <div id="score">Acertos: 0</div>
+    <div id="image-display"></div>
+    <div id="options"></div> <!-- Usar um div em vez de uma tabela -->
+    <button id="start-button">Iniciar</button>
+
+    <script>
+        const images = [
+            { src: './images/1.png' },
+            { src: './images/2.png' },
+            { src: './images/3.png' },
+            { src: './images/4.png' },
+            { src: './images/5.png' },
+            { src: './images/6.png' },
+            { src: './images/7.png' },
+            { src: './images/8.png' },
+            { src: './images/9.png' },
+            { src: './images/10.png' },
+            { src: './images/11.png' },
+            { src: './images/12.png' },
+            { src: './images/13.png' },
+            { src: './images/14.png' },
+            { src: './images/15.png' },
+            { src: './images/16.png' }
+        ];
+        
+        let currentStep = 1;
+        let currentSequence = [];
+        let userScore = 0;
+        let attemptsLeft = 0;
+
+        function startGame() {
+            userScore = 0;
+            currentStep = 1;
+            document.getElementById('score').innerText = `Acertos: ${userScore}`;
+            document.getElementById('start-button').style.display = 'none';
+            nextRound();
+        }
+
+        function nextRound() {
+            currentSequence = generateSequence(currentStep);
+            attemptsLeft = currentStep;
+            displayImages(currentSequence);
+        }
+
+        function generateSequence(length) {
+            const sequence = [];
+            for (let i = 0; i < length; i++) {
+                sequence.push(images[Math.floor(Math.random() * images.length)]);
+            }
+            return sequence;
+        }
+
+        function displayImages(sequence) {
+            const display = document.getElementById('image-display');
+            display.innerHTML = '';
+            sequence.forEach(() => {
+                const redCircle = document.createElement('div');
+                redCircle.classList.add('red-circle');
+                display.appendChild(redCircle);
+            });
+            setTimeout(() => {
+                display.innerHTML = '';
+                sequence.forEach(image => {
+                    const img = document.createElement('img');
+                    img.src = image.src;
+                    img.style.width = 'calc(20vw - 10px)'; // Ajuste de largura para responsividade
+                    img.style.height = 'auto'; // Mantém a proporção da imagem
+                    display.appendChild(img);
+                });
+                setTimeout(() => {
+                    display.innerHTML = '';
+                    showOptions();
+                }, sequence.length * 4000); // Aumenta o tempo para 4 segundos
+            }, 2000);
+        }
+
+        function showOptions() {
+            const optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';
+            optionsContainer.style.display = 'grid'; // Mostra o grid
+            images.sort(() => Math.random() - 0.5).forEach((image, index) => {
+                const cell = document.createElement('div'); // Cria uma célula
+                const option = document.createElement('img');
+                option.src = image.src;
+                option.className = 'option';
+                option.onclick = () => checkSelection(image.src, option);
+                cell.appendChild(option);
+                optionsContainer.appendChild(cell); // Adiciona a célula ao container
+            });
+        }
+
+        function checkSelection(selectedImageSrc, optionElement) {
+            const isCorrect = currentSequence.some(image => image.src === selectedImageSrc);
+            if (isCorrect) {
+                userScore++;
+                document.getElementById('score').innerText = `Acertos: ${userScore}`;
+                currentSequence = currentSequence.filter(image => image.src !== selectedImageSrc);
+                
+                showStars(optionElement); // Mostra a estrela sobre a opção correta
+
+                if (currentSequence.length === 0) {
+                    currentStep++;
+                    setTimeout(() => nextRound(), 1000);
+                }
+            } else {
+                optionElement.classList.add('shake');
+                attemptsLeft--;
+
+                if (attemptsLeft <= 0) {
+                    setTimeout(() => nextRound(), 1000);
+                }
+            }
+        }
+
+        function showStars(optionElement) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.innerHTML = '⭐';
+            optionElement.parentNode.appendChild(star);
+            setTimeout(() => star.remove(), 500);
+        }
+
+        document.getElementById('start-button').onclick = startGame;
+    </script>
+</body>
+</html>
+
