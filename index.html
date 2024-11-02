@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jogo de Memória com Imagens</title>
+    <title>Memória e Expressão</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -13,37 +13,44 @@
             padding: 20px;
         }
         h1 {
-            margin-bottom: 10px;
+            margin-bottom: 20px;
             color: #1e88e5; /* Azul */
-            font-size: 24px; /* Tamanho da fonte ajustado */
         }
         #instructions {
             font-size: 18px;
             color: #424242; /* Cor cinza escuro */
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
         #image-display {
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 150px; /* Altura fixa para centralização */
-            margin-bottom: 15px;
+            height: 200px; /* Altura fixa para centralização */
+            margin-bottom: 20px;
         }
         #options {
             display: none; /* Oculta inicialmente */
+            margin: 20px auto; /* Margem automática para centralizar */
+            border-collapse: collapse; /* Colapsa as bordas */
+            width: 100%; /* Largura total */
+            max-width: 640px; /* Largura máxima da tabela */
+            display: flex; /* Flexbox para a tabela */
             flex-wrap: wrap; /* Permite quebrar linhas */
             justify-content: center; /* Centraliza os itens */
-            margin-top: 10px; /* Margem superior para espaçamento */
         }
         #options div {
             padding: 5px; /* Espaçamento interno */
+            border: 2pt solid #90caf9; /* Linha de separação */
             margin: 5px; /* Margem entre as células */
             border-radius: 8px; /* Bordas arredondadas */
+            display: flex; /* Flexbox para centralizar imagem */
+            justify-content: center; /* Centraliza horizontalmente */
+            align-items: center; /* Centraliza verticalmente */
             position: relative; /* Necessário para a posição da estrela */
         }
         .option {
-            width: 80px; /* Ajuste de tamanho */
-            height: 80px; /* Ajuste de tamanho */
+            width: 100px; /* Ajuste de tamanho */
+            height: 100px; /* Ajuste de tamanho */
             cursor: pointer;
             transition: transform 0.2s;
         }
@@ -52,8 +59,8 @@
         }
         .red-circle {
             display: inline-block;
-            width: 100px;
-            height: 100px;
+            width: 150px;
+            height: 150px;
             border-radius: 50%;
             background-color: rgba(255, 0, 0, 0.3); /* Círculo vermelho claro */
             position: relative;
@@ -80,12 +87,12 @@
             to { opacity: 0; top: -30px; }
         }
         #score {
-            font-size: 20px;
-            margin: 10px 0;
+            font-size: 24px;
+            margin: 20px 0;
             color: #1e88e5; /* Azul */
         }
         #start-button {
-            padding: 10px 15px;
+            padding: 10px 20px;
             font-size: 18px;
             cursor: pointer;
             background-color: #42a5f5; /* Azul mais forte */
@@ -93,16 +100,24 @@
             border: none;
             border-radius: 5px;
             transition: background-color 0.3s;
-            margin-top: 15px; /* Espaço acima do botão */
         }
         #start-button:hover {
             background-color: #1e88e5; /* Azul mais escuro */
+        }
+        #mobile-link {
+            display: none; /* Oculto por padrão */
+            margin: 20px 0;
+            font-size: 16px;
+            color: #1e88e5; /* Azul */
         }
     </style>
 </head>
 <body>
 
-    <h1>Jogo de Memória com Imagens</h1>
+    <h1>Memória e Expressão</h1>
+    <div id="mobile-link">
+        <a href="indexcelular.html">Abrir Index Celular</a>
+    </div>
     <div id="instructions">Imite cada expressão e memorize.</div>
     <div id="score">Acertos: 0</div>
     <div id="image-display"></div>
@@ -139,6 +154,7 @@
             currentStep = 1;
             document.getElementById('score').innerText = `Acertos: ${userScore}`;
             document.getElementById('start-button').style.display = 'none';
+            document.getElementById('mobile-link').style.display = 'none'; // Oculta o link após iniciar o jogo
             nextRound();
         }
 
@@ -222,13 +238,16 @@
             const star = document.createElement('div');
             star.className = 'star';
             star.innerHTML = '⭐';
-            optionElement.parentNode.appendChild(star);
-            setTimeout(() => star.remove(), 500);
+            optionElement.parentElement.appendChild(star);
         }
 
-        document.getElementById('start-button').onclick = startGame;
-    </script>
+        document.getElementById('start-button').addEventListener('click', startGame);
 
+        // Verifica se a tela é menor que 768px para exibir o link do celular
+        if (window.innerWidth < 768) {
+            document.getElementById('mobile-link').style.display = 'block';
+        }
+    </script>
 </body>
 </html>
 
