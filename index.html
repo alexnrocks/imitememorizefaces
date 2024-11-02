@@ -3,84 +3,234 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Faces Emocionais</title>
+    <title>Jogo de Memória com Imagens</title>
     <style>
         body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #e6f7ff; /* Cor de fundo suave */
             font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #e3f2fd; /* Azul claro */
+            margin: 0;
+            padding: 20px;
         }
-
-        #faces-container {
-            display: none; /* Começa escondido */
+        h1 {
+            margin-bottom: 20px;
+            color: #1e88e5; /* Azul */
+        }
+        #image-display {
+            display: flex;
             justify-content: center;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 20px;
-            margin-top: 20px;
+            height: 200px; /* Altura fixa para centralização */
+            margin-bottom: 20px;
         }
-
-        img {
-            width: 150px; /* Ajuste a largura conforme necessário */
-            height: auto;
-            border-radius: 10px;
-            border: 2px solid #a3c1e0; /* Borda suave */
+        #options {
+            display: none; /* Oculta inicialmente */
+            margin: 20px auto; /* Margem automática para centralizar */
+            border-collapse: collapse; /* Colapsa as bordas */
+            width: 100%; /* Largura total */
+            max-width: 640px; /* Largura máxima da tabela */
+            display: flex; /* Flexbox para a tabela */
+            flex-wrap: wrap; /* Permite quebrar linhas */
+            justify-content: center; /* Centraliza os itens */
+        }
+        #options div {
+            padding: 5px; /* Espaçamento interno */
+            border: 2pt solid #90caf9; /* Linha de separação */
+            margin: 5px; /* Margem entre as células */
+            border-radius: 8px; /* Bordas arredondadas */
+            display: flex; /* Flexbox para centralizar imagem */
+            justify-content: center; /* Centraliza horizontalmente */
+            align-items: center; /* Centraliza verticalmente */
+        }
+        .option {
+            width: 100px; /* Ajuste de tamanho */
+            height: 100px; /* Ajuste de tamanho */
+            cursor: pointer;
             transition: transform 0.2s;
         }
-
-        img:hover {
-            transform: scale(1.1); /* Efeito de hover */
+        .option:hover {
+            transform: scale(1.05);
         }
-
-        .line {
-            width: 100%;
-            height: 2px;
-            background-color: #a3c1e0; /* Linha separadora */
+        .red-circle {
+            display: inline-block;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background-color: rgba(255, 0, 0, 0.3); /* Círculo vermelho claro */
+            position: relative;
+        }
+        .shake {
+            animation: shake 0.5s;
+        }
+        @keyframes shake {
+            0% { transform: translate(0); }
+            25% { transform: translate(-5px); }
+            50% { transform: translate(5px); }
+            75% { transform: translate(-5px); }
+            100% { transform: translate(0); }
+        }
+        .star {
+            font-size: 20px;
+            color: gold;
+            position: absolute;
+            top: -10px;
+            animation: move-up 0.5s ease-in-out forwards;
+        }
+        @keyframes move-up {
+            from { opacity: 1; top: 0; }
+            to { opacity: 0; top: -30px; }
+        }
+        #score {
+            font-size: 24px;
             margin: 20px 0;
+            color: #1e88e5; /* Azul */
         }
-
-        .hidden {
-            display: none; /* Classe para esconder elementos */
+        #start-button {
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+            background-color: #42a5f5; /* Azul mais forte */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        #start-button:hover {
+            background-color: #1e88e5; /* Azul mais escuro */
         }
     </style>
 </head>
 <body>
-    <h1>Faces Emocionais</h1>
-    <div id="main-face">
-        <img src="./images/1.png" alt="1" id="face-image" />
-    </div>
-    <div class="line"></div>
-    <div id="faces-container">
-        <img src="./images/1.png" alt="1" onclick="alert('Face 1 clicada!')">
-        <img src="./images/2.png" alt="2" onclick="alert('Face 2 clicada!')">
-        <img src="./images/3.png" alt="3" onclick="alert('Face 3 clicada!')">
-        <img src="./images/4.png" alt="4" onclick="alert('Face 4 clicada!')">
-        <img src="./images/5.png" alt="5" onclick="alert('Face 5 clicada!')">
-        <img src="./images/6.png" alt="6" onclick="alert('Face 6 clicada!')">
-        <img src="./images/7.png" alt="7" onclick="alert('Face 7 clicada!')">
-        <img src="./images/8.png" alt="8" onclick="alert('Face 8 clicada!')">
-        <img src="./images/9.png" alt="9" onclick="alert('Face 9 clicada!')">
-        <img src="./images/10.png" alt="10" onclick="alert('Face 10 clicada!')">
-        <img src="./images/11.png" alt="11" onclick="alert('Face 11 clicada!')">
-        <img src="./images/12.png" alt="12" onclick="alert('Face 12 clicada!')">
-        <img src="./images/13.png" alt="13" onclick="alert('Face 13 clicada!')">
-        <img src="./images/14.png" alt="14" onclick="alert('Face 14 clicada!')">
-        <img src="./images/15.png" alt="15" onclick="alert('Face 15 clicada!')">
-        <img src="./images/16.png" alt="16" onclick="alert('Face 16 clicada!')">
-    </div>
+
+    <h1>Jogo de Memória com Imagens</h1>
+    <div id="score">Acertos: 0</div>
+    <div id="image-display"></div>
+    <div id="options"></div> <!-- Usar um div em vez de uma tabela -->
+    <button id="start-button">Iniciar</button>
 
     <script>
-        // Mostrar a face principal por 3 segundos
-        setTimeout(() => {
-            document.getElementById('main-face').style.display = 'none';
-            document.getElementById('faces-container').style.display = 'flex';
-        }, 3000);
+        const images = [
+            { src: './images/1.png' },
+            { src: './images/2.png' },
+            { src: './images/3.png' },
+            { src: './images/4.png' },
+            { src: './images/5.png' },
+            { src: './images/6.png' },
+            { src: './images/7.png' },
+            { src: './images/8.png' },
+            { src: './images/9.png' },
+            { src: './images/10.png' },
+            { src: './images/11.png' },
+            { src: './images/12.png' },
+            { src: './images/13.png' },
+            { src: './images/14.png' },
+            { src: './images/15.png' },
+            { src: './images/16.png' }
+        ];
+        
+        let currentStep = 1;
+        let currentSequence = [];
+        let userScore = 0;
+        let attemptsLeft = 0;
+
+        function startGame() {
+            userScore = 0;
+            currentStep = 1;
+            document.getElementById('score').innerText = `Acertos: ${userScore}`;
+            document.getElementById('start-button').style.display = 'none';
+            nextRound();
+        }
+
+        function nextRound() {
+            currentSequence = generateSequence(currentStep);
+            attemptsLeft = currentStep;
+            displayImages(currentSequence);
+        }
+
+        function generateSequence(length) {
+            const sequence = [];
+            for (let i = 0; i < length; i++) {
+                sequence.push(images[Math.floor(Math.random() * images.length)]);
+            }
+            return sequence;
+        }
+
+        function displayImages(sequence) {
+            const display = document.getElementById('image-display');
+            display.innerHTML = '';
+            sequence.forEach(() => {
+                const redCircle = document.createElement('div');
+                redCircle.classList.add('red-circle');
+                display.appendChild(redCircle);
+            });
+            setTimeout(() => {
+                display.innerHTML = '';
+                sequence.forEach(image => {
+                    const img = document.createElement('img');
+                    img.src = image.src;
+                    img.width = 150; // Tamanho maior para visualização
+                    img.height = 150; // Tamanho maior para visualização
+                    display.appendChild(img);
+                });
+                setTimeout(() => {
+                    display.innerHTML = '';
+                    showOptions();
+                }, sequence.length * 2000);
+            }, 2000);
+        }
+
+        function showOptions() {
+            const optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';
+            optionsContainer.style.display = 'flex'; // Mostra a tabela
+            images.sort(() => Math.random() - 0.5).forEach((image, index) => {
+                const cell = document.createElement('div'); // Cria uma célula
+                const option = document.createElement('img');
+                option.src = image.src;
+                option.className = 'option';
+                option.onclick = () => checkSelection(image.src, option);
+                cell.appendChild(option);
+                optionsContainer.appendChild(cell); // Adiciona a célula ao container
+            });
+        }
+
+        function checkSelection(selectedImageSrc, optionElement) {
+            const isCorrect = currentSequence.some(image => image.src === selectedImageSrc);
+            if (isCorrect) {
+                userScore++;
+                document.getElementById('score').innerText = `Acertos: ${userScore}`;
+                currentSequence = currentSequence.filter(image => image.src !== selectedImageSrc);
+                
+                showStars(optionElement);
+
+                if (currentSequence.length === 0) {
+                    currentStep++;
+                    setTimeout(() => nextRound(), 1000);
+                }
+            } else {
+                optionElement.classList.add('shake');
+                attemptsLeft--;
+
+                if (attemptsLeft <= 0) {
+                    setTimeout(() => nextRound(), 1000);
+                }
+            }
+        }
+
+        function showStars(optionElement) {
+            for (let i = 0; i < 3; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.innerHTML = '⭐';
+                optionElement.parentNode.appendChild(star);
+
+                setTimeout(() => star.remove(), 500);
+            }
+        }
+
+        document.getElementById('start-button').onclick = startGame;
     </script>
+
 </body>
 </html>
 
