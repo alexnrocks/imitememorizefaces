@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=100%">
+    <title>Memória e Expressão</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #e3f2fd; /* Azul claro */
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            margin-bottom: 20px;
+            color: #1e88e5; /* Azul */
+        }
+        #instructions {
+            font-size: 18px;
+            color: #424242; /* Cor cinza escuro */
+            margin-bottom: 20px;
+        }
+        #image-display {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px; /* Altura fixa para centralização */
+            margin-bottom: 20px;
+        }
+        #options {
+            display: none; /* Oculta inicialmente */
+            margin: 20px auto; /* Margem automática para centralizar */
+            border-collapse: collapse; /* Colapsa as bordas */
+            width: 100%; /* Largura total */
+            max-width: 640px; /* Largura máxima da tabela */
+            display: flex; /* Flexbox para a tabela */
+            flex-wrap: wrap; /* Permite quebrar linhas */
+            justify-content: center; /* Centraliza os itens */
+        }
+        #options div {
+            padding: 5px; /* Espaçamento interno */
+            border: 2pt solid #90caf9; /* Linha de separação */
+            margin: 5px; /* Margem entre as células */
+            border-radius: 8px; /* Bordas arredondadas */
+            display: flex; /* Flexbox para centralizar imagem */
+            justify-content: center; /* Centraliza horizontalmente */
+            align-items: center; /* Centraliza verticalmente */
+            position: relative; /* Necessário para a posição da estrela */
+        }
+        .option {
+            width: 100px; /* Ajuste de tamanho */
+            height: 100px; /* Ajuste de tamanho */
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .option:hover {
+            transform: scale(1.05);
+        }
+        .red-circle {
+            display: inline-block;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background-color: rgba(255, 0, 0, 0.3); /* Círculo vermelho claro */
+            position: relative;
+        }
+        .shake {
+            animation: shake 0.5s;
+        }
+        @keyframes shake {
+            0% { transform: translate(0); }
+            25% { transform: translate(-5px); }
+            50% { transform: translate(5px); }
+            75% { transform: translate(-5px); }
+            100% { transform: translate(0); }
+        }
+        .star {
+            font-size: 20px;
+            color: gold;
+            position: absolute;
+            top: -10px;
+            animation: move-up 0.5s ease-in-out forwards;
+        }
+        @keyframes move-up {
+            from { opacity: 1; top: 0; }
+            to { opacity: 0; top: -30px; }
+        }
+        #score {
+            font-size: 24px;
+            margin: 20px 0;
+            color: #1e88e5; /* Azul */
+        }
+        #start-button {
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+            background-color: #42a5f5; /* Azul mais forte */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        #start-button:hover {
+            background-color: #1e88e5; /* Azul mais escuro */
+        }
+        #mobile-link {
+            display: none; /* Oculto por padrão */
+            margin: 20px 0;
+            font-size: 16px;
+            color: #1e88e5; /* Azul */
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Memória e Expressão</h1>
+    <div id="mobile-link">
+        <a href="indexcelular.html">Abrir Index Celular</a>
+    </div>
+    <div id="instructions">Imite cada expressão e memorize.</div>
+    <div id="score">Acertos: 0</div>
+    <div id="image-display"></div>
+    <div id="options"></div> <!-- Usar um div em vez de uma tabela -->
+    <button id="start-button">Iniciar</button>
+
+    <script>
+        const images = [
+            { src: './images/17.png' },
+            { src: './images/18.png' },
+            { src: './images/19.png' },
+            { src: './images/20.png' },
+            { src: './images/21.png' },
+            { src: './images/22.png' },
+            { src: './images/23.png' },
+            { src: './images/24.png' },
+            { src: './images/25.png' },
+            { src: './images/27.png' },
+            { src: './images/28.png' },
+            { src: './images/12.png' },
+            { src: './images/13.png' },
+            { src: './images/14.png' },
+            { src: './images/15.png' },
+            { src: './images/16.png' }
+        ];
+        
+        let currentStep = 1;
+        let currentSequence = [];
+        let userScore = 0;
+        let attemptsLeft = 0;
+
+        function startGame() {
+            userScore = 0;
+            currentStep = 1;
+            document.getElementById('score').innerText = `Acertos: ${userScore}`;
+            document.getElementById('start-button').style.display = 'none';
+            document.getElementById('mobile-link').style.display = 'none'; // Oculta o link após iniciar o jogo
+            nextRound();
+        }
+
+        function nextRound() {
+            currentSequence = generateSequence(currentStep);
+            attemptsLeft = currentStep;
+            displayImages(currentSequence);
+        }
+
+        function generateSequence(length) {
+            const sequence = [];
+            for (let i = 0; i < length; i++) {
+                sequence.push(images[Math.floor(Math.random() * images.length)]);
+            }
+            return sequence;
+        }
+
+        function displayImages(sequence) {
+            const display = document.getElementById('image-display');
+            display.innerHTML = '';
+            sequence.forEach(() => {
+                const redCircle = document.createElement('div');
+                redCircle.classList.add('red-circle');
+                display.appendChild(redCircle);
+            });
+            setTimeout(() => {
+                display.innerHTML = '';
+                sequence.forEach(image => {
+                    const img = document.createElement('img');
+                    img.src = image.src;
+                    img.width = 150; // Tamanho maior para visualização
+                    img.height = 150; // Tamanho maior para visualização
+                    display.appendChild(img);
+                });
+                setTimeout(() => {
+                    display.innerHTML = '';
+                    showOptions();
+                }, sequence.length * 4000); // Aumenta o tempo para 4 segundos
+            }, 2000);
+        }
+
+        function showOptions() {
+            const optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';
+            optionsContainer.style.display = 'flex'; // Mostra a tabela
+            images.sort(() => Math.random() - 0.5).forEach((image, index) => {
+                const cell = document.createElement('div'); // Cria uma célula
+                const option = document.createElement('img');
+                option.src = image.src;
+                option.className = 'option';
+                option.onclick = () => checkSelection(image.src, option);
+                cell.appendChild(option);
+                optionsContainer.appendChild(cell); // Adiciona a célula ao container
+            });
+        }
+
+        function checkSelection(selectedImageSrc, optionElement) {
+            const isCorrect = currentSequence.some(image => image.src === selectedImageSrc);
+            if (isCorrect) {
+                userScore++;
+                document.getElementById('score').innerText = `Acertos: ${userScore}`;
+                currentSequence = currentSequence.filter(image => image.src !== selectedImageSrc);
+                
+                showStars(optionElement); // Mostra a estrela sobre a opção correta
+
+                if (currentSequence.length === 0) {
+                    currentStep++;
+                    setTimeout(() => nextRound(), 1000);
+                }
+            } else {
+                optionElement.classList.add('shake');
+                attemptsLeft--;
+
+                if (attemptsLeft <= 0) {
+                    setTimeout(() => nextRound(), 1000);
+                }
+            }
+        }
+
+        function showStars(optionElement) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.innerHTML = '⭐';
+            optionElement.parentElement.appendChild(star);
+        }
+
+        document.getElementById('start-button').addEventListener('click', startGame);
+
+        // Verifica se a tela é menor que 768px para exibir o link do celular
+        if (window.innerWidth < 900) {
+            document.getElementById('mobile-link').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
