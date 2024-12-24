@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=100%">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Memória e Expressão</title>
     <style>
         body {
@@ -25,7 +25,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 200px; /* Altura fixa para centralização */
+            height:  50px; /* Altura fixa para centralização */
             margin-bottom: 20px;
         }
         #options {
@@ -33,7 +33,7 @@
             margin: 20px auto; /* Margem automática para centralizar */
             border-collapse: collapse; /* Colapsa as bordas */
             width: 100%; /* Largura total */
-            max-width: 640px; /* Largura máxima da tabela */
+            max-width: 480px; /* Largura máxima da tabela */
             display: flex; /* Flexbox para a tabela */
             flex-wrap: wrap; /* Permite quebrar linhas */
             justify-content: center; /* Centraliza os itens */
@@ -49,8 +49,8 @@
             position: relative; /* Necessário para a posição da estrela */
         }
         .option {
-            width: 100px; /* Ajuste de tamanho */
-            height: 100px; /* Ajuste de tamanho */
+            width: 50px; /* Ajuste de tamanho */
+            height: 50px; /* Ajuste de tamanho */
             cursor: pointer;
             transition: transform 0.2s;
         }
@@ -59,8 +59,8 @@
         }
         .red-circle {
             display: inline-block;
-            width: 150px;
-            height: 150px;
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
             background-color: rgba(255, 0, 0, 0.3); /* Círculo vermelho claro */
             position: relative;
@@ -126,22 +126,22 @@
 
     <script>
         const images = [
-            { src: './images/1.png' },
-            { src: './images/2.png' },
-            { src: './images/3.png' },
-            { src: './images/4.png' },
-            { src: './images/5.png' },
-            { src: './images/6.png' },
-            { src: './images/7.png' },
-            { src: './images/8.png' },
-            { src: './images/9.png' },
-            { src: './images/10.png' },
-            { src: './images/11.png' },
-            { src: './images/12.png' },
-            { src: './images/13.png' },
-            { src: './images/14.png' },
-            { src: './images/15.png' },
-            { src: './images/16.png' }
+            { src: '/images/1.png' },
+            { src: '/images/2.png' },
+            { src: '/images/3.png' },
+            { src: '/images/4.png' },
+            { src: '/images/5.png' },
+            { src: '/images/6.png' },
+            { src: '/images/7.png' },
+            { src: '/images/8.png' },
+            { src: '/images/9.png' },
+            { src: '/images/10.png' },
+            { src: '/images/11.png' },
+            { src: '/images/12.png' },
+            { src: '/images/13.png' },
+            { src: '/images/14.png' },
+            { src: '/images/15.png' },
+            { src: '/images/16.png' }
         ];
         
         let currentStep = 1;
@@ -185,8 +185,8 @@
                 sequence.forEach(image => {
                     const img = document.createElement('img');
                     img.src = image.src;
-                    img.width = 150; // Tamanho maior para visualização
-                    img.height = 150; // Tamanho maior para visualização
+                    img.width = 75; // Tamanho maior para visualização
+                    img.height = 75; // Tamanho maior para visualização
                     display.appendChild(img);
                 });
                 setTimeout(() => {
@@ -244,7 +244,7 @@
         document.getElementById('start-button').addEventListener('click', startGame);
 
         // Verifica se a tela é menor que 768px para exibir o link do celular
-        if (window.innerWidth < 900) {
+        if (window.innerWidth < 768) {
             document.getElementById('mobile-link').style.display = 'block';
         }
     </script>
